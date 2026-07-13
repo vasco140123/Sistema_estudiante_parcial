@@ -285,7 +285,7 @@ export default function AdministracionUsuarios() {
       {mensaje && <div className="mb-6 p-3 bg-green-50 border border-green-200 text-green-700 text-sm ">{mensaje}</div>}
       {error && <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-700 text-sm ">{error}</div>}
 
-      <div className="bg-white  border border-gray-200 overflow-hidden mb-8">
+      <div className="bg-white  border border-gray-200 table-container mb-8">
         <div className="p-4 border-b border-gray-200">
           <input type="text" placeholder="Buscar por usuario o rol..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
         </div>

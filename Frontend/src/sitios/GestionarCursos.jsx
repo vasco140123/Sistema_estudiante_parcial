@@ -186,7 +186,7 @@ export default function GestionarCursos() {
       {error && <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-700 text-sm ">{error}</div>}
 
       {/* Cursos */}
-      <div className="bg-white  border border-gray-200 overflow-hidden mb-8">
+      <div className="bg-white  border border-gray-200 table-container mb-8">
         <div className="p-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Cursos</h3>
         </div>
@@ -236,7 +236,7 @@ export default function GestionarCursos() {
       </div>
 
       {/* Asignación a planes */}
-      <div className="bg-white  border border-gray-200 overflow-hidden">
+      <div className="bg-white  border border-gray-200 table-container">
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">Asignación de cursos a planes</h3>
           <div>
@@ -297,7 +297,7 @@ export default function GestionarCursos() {
       </div>
 
       {/* Prerequisitos */}
-      <div className="bg-white border border-gray-200 overflow-hidden mt-8">
+      <div className="bg-white border border-gray-200 table-container mt-8">
         <div className="p-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Prerequisitos</h3>
         </div>

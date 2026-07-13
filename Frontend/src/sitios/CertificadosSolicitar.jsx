@@ -89,26 +89,28 @@ export default function CertificadosSolicitar() {
       {respuesta && (
         <div className="bg-white  border border-gray-200 p-6 mb-8 border-l-4 border-l-green-500">
           <h3 className="text-lg font-semibold text-green-700 mb-4">Solicitud registrada</h3>
-          <table className="w-full text-sm mb-4">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">N° Solicitud</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Tipo</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Estado</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Fecha</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              <tr className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-bold text-gray-900">{respuesta.id}</td>
-                <td className="px-4 py-3 text-gray-600">{respuesta.tipo}</td>
-                <td className="px-4 py-3">
-                  <span className="inline-flex items-center px-2.5 py-0.5  text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">{respuesta.estado}</span>
-                </td>
-                <td className="px-4 py-3 text-gray-600">{respuesta.fecha_solicitud}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="table-container mb-4">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">N° Solicitud</th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Tipo</th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Estado</th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Fecha</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 font-bold text-gray-900">{respuesta.id}</td>
+                  <td className="px-4 py-3 text-gray-600">{respuesta.tipo}</td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center px-2.5 py-0.5  text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">{respuesta.estado}</span>
+                  </td>
+                  <td className="px-4 py-3 text-gray-600">{respuesta.fecha_solicitud}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div className="bg-green-50  p-4 text-sm">
             <strong className="block mb-2 text-green-800">Pasos siguientes:</strong>
             <ol className="m-0 pl-5 space-y-1 text-gray-700">

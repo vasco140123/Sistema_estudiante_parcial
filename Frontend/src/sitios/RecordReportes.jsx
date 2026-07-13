@@ -235,7 +235,7 @@ export default function RecordReportes() {
             </div>
           )}
 
-          <div className="bg-white  border border-gray-200 overflow-hidden mb-8">
+          <div className="bg-white  border border-gray-200 table-container mb-8">
             <div className="px-4 py-3 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">Desempeno por cohorte</h3>
             </div>
