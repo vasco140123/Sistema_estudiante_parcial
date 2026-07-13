@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #059669;
+  --color-primary-hover: #047857;
+  --color-primary-light: #d1fae5;
+  --color-primary-dark: #065f46;
+  --sidebar-width: 270px;
+}
+
+:root {
+  --bg-body: #f9fafb;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --bg-table-header: #f9fafb;
+  --bg-hover: #f3f4f6;
+  --bg-modal-overlay: rgba(0, 0, 0, 0.5);
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --text-muted-light: #9ca3af;
+  --border-color: #d1d5db;
+  --border-light: #e5e7eb;
+}
+
+.dark {
+  --bg-body: #0f172a;
+  --bg-card: #1e293b;
+  --bg-input: #334155;
+  --bg-table-header: #334155;
+  --bg-hover: #334155;
+  --bg-modal-overlay: rgba(0, 0, 0, 0.7);
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-muted-light: #64748b;
+  --border-color: #475569;
+  --border-light: #334155;
+}
+
+body {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+input, select, textarea {
+  @apply w-full px-3 py-2 border text-sm outline-none transition duration-150;
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+input:focus, select:focus, textarea:focus {
+  @apply border-primary ring-2 ring-primary-light;
+}
+
+label {
+  @apply block mb-1 text-xs font-semibold uppercase tracking-wide;
+  color: var(--text-muted);
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f3f4f6; }
+.dark ::-webkit-scrollbar-track { background: #1e293b; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 0; }
+.dark ::-webkit-scrollbar-thumb { background: #475569; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* ── Tailwind utility overrides for dark mode ────────────────────────── */
+.dark .bg-white { background-color: var(--bg-card) !important; }
+.dark .bg-gray-50 { background-color: var(--bg-table-header) !important; }
+.dark .bg-gray-100 { background-color: #334155 !important; }
+.dark .bg-black\/50 { background-color: var(--bg-modal-overlay) !important; }
+
+.dark .text-gray-900 { color: var(--text-primary) !important; }
+.dark .text-gray-800 { color: var(--text-primary) !important; }
+.dark .text-gray-700 { color: var(--text-secondary) !important; }
+.dark .text-gray-600 { color: var(--text-muted) !important; }
+.dark .text-gray-500 { color: var(--text-muted-light) !important; }
+
+.dark .border-gray-200 { border-color: var(--border-light) !important; }
+.dark .border-gray-300 { border-color: var(--border-color) !important; }
+.dark .border-gray-100 { border-color: var(--border-light) !important; }
+
+.dark .hover\:bg-gray-50:hover { background-color: var(--bg-hover) !important; }
+.dark .hover\:bg-gray-100:hover { background-color: #475569 !important; }
+.dark .hover\:text-gray-700:hover { color: var(--text-secondary) !important; }
+
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: var(--border-light) !important; }
