@@ -88,9 +88,9 @@ export default function RecordReportes() {
 
       {kardex && (
         <div className="bg-white  border border-gray-200 p-6 mb-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
             <h3 className="text-lg font-semibold text-gray-900">Kardex — {kardex.estudiante.nombre_completo}</h3>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <button onClick={cerrarKardex}
                 className="px-3 py-1.5 text-xs font-semibold  border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer">
                 Cerrar
@@ -135,9 +135,9 @@ export default function RecordReportes() {
             </div>
           )}
 
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <h4 className="text-base font-semibold text-gray-900">Cursos cursados</h4>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               {["todos", "aprobados", "desaprobados"].map((op) => (
                 <button key={op} onClick={() => setFiltroCurso(op)}
                   className={`px-3 py-1 text-xs font-semibold  border transition-colors cursor-pointer ${
@@ -148,39 +148,42 @@ export default function RecordReportes() {
               ))}
             </div>
           </div>
-          <table className="w-full text-sm mb-6">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Periodo</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Curso</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Cred.</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Nota final</th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Estado</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {cursosFiltrados.length === 0 ? (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-gray-500">No hay cursos que mostrar.</td></tr>
-              ) : cursosFiltrados.map((c, i) => (
-                <tr key={i} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-600">{c.periodo_academico_nombre}</td>
-                  <td className="px-4 py-3 text-gray-900 font-medium">{c.curso_nombre}</td>
-                  <td className="px-4 py-3 text-center text-gray-600">{c.creditos}</td>
-                  <td className="px-4 py-3 text-center font-semibold text-gray-900">{c.nota_final ?? "—"}</td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex items-center px-2.5 py-0.5  text-xs font-medium border ${
-                      c.estado_nombre === "Aprobado" ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"
-                    }`}>{c.estado_nombre}</span>
-                  </td>
+          <div className="table-container mb-6">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Periodo</th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Curso</th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Cred.</th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Nota final</th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Estado</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {cursosFiltrados.length === 0 ? (
+                  <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-gray-500">No hay cursos que mostrar.</td></tr>
+                ) : cursosFiltrados.map((c, i) => (
+                  <tr key={i} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-gray-600">{c.periodo_academico_nombre}</td>
+                    <td className="px-4 py-3 text-gray-900 font-medium">{c.curso_nombre}</td>
+                    <td className="px-4 py-3 text-center text-gray-600">{c.creditos}</td>
+                    <td className="px-4 py-3 text-center font-semibold text-gray-900">{c.nota_final ?? "—"}</td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex items-center px-2.5 py-0.5  text-xs font-medium border ${
+                        c.estado_nombre === "Aprobado" ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"
+                      }`}>{c.estado_nombre}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           {kardex.historial.length > 0 && (
             <>
               <h4 className="text-base font-semibold text-gray-900 mb-4">Resumen por periodo</h4>
-              <table className="w-full text-sm mb-6">
+              <div className="table-container mb-6">
+                <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
                     <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">Periodo</th>
@@ -204,6 +207,7 @@ export default function RecordReportes() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </>
           )}
 

@@ -172,7 +172,7 @@ export default function GestionarCursos() {
 
   return (
     <div>
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex items-start justify-between mb-8 flex-wrap gap-2">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Gestión de cursos</h2>
         </div>
@@ -217,7 +217,7 @@ export default function GestionarCursos() {
                   <td className="px-4 py-3 text-gray-600">{c.horas_lectivas}</td>
                   <td className="px-4 py-3 text-gray-600">{c.horas_practicas}</td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-1.5">
+                    <div className="flex gap-1.5 flex-wrap">
                       <button onClick={() => abrirEditarCurso(c)}
                         className="px-2.5 py-1 text-xs font-semibold  border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer">
                         Editar
@@ -237,11 +237,11 @@ export default function GestionarCursos() {
 
       {/* Asignación a planes */}
       <div className="bg-white  border border-gray-200 table-container">
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-wrap gap-2">
           <h3 className="text-lg font-semibold text-gray-900">Asignación de cursos a planes</h3>
-          <div>
+          <div className="w-full md:w-auto">
             <select value={planSeleccionado} onChange={(e) => setPlanSeleccionado(e.target.value)}
-              className="w-64">
+              className="w-full md:w-64">
               <option value="">Seleccionar plan...</option>
               {planes.map(p => (
                 <option key={p.id} value={p.id}>{p.nombre || `Plan #${p.id}`}</option>
@@ -369,8 +369,8 @@ export default function GestionarCursos() {
           <div className="bg-white  shadow-xl p-6 w-full max-w-lg mx-4" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-bold text-gray-900 mb-4">{editandoCurso ? "Editar curso" : "Nuevo curso"}</h3>
             <form onSubmit={guardarCurso}>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="col-span-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="md:col-span-2">
                   <label>Nombre *</label>
                   <input type="text" required value={cursoForm.nombre} onChange={(e) => setCursoForm({ ...cursoForm, nombre: e.target.value })} />
                 </div>

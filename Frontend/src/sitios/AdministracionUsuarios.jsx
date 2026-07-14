@@ -146,7 +146,7 @@ export default function AdministracionUsuarios() {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Usuarios y roles</h2>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <button onClick={() => setMostrarPlanes(!mostrarPlanes)}
             className="px-4 py-2 bg-white text-gray-700 text-sm font-semibold  border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer">
             {mostrarPlanes ? "Ocultar planes" : "Gestionar planes"}
@@ -193,7 +193,8 @@ export default function AdministracionUsuarios() {
             </div>
           </div>
 
-          <table className="w-full text-sm">
+          <div className="table-container">
+            <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th className="text-left px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider">ID</th>
@@ -217,7 +218,7 @@ export default function AdministracionUsuarios() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-1.5">
+                    <div className="flex gap-1.5 flex-wrap">
                       <button onClick={() => { setEditandoPlan(p.id); setPlanEditForm({ especialidad_id: p.especialidad_id, anio_creacion: p.anio_creacion, vigente: p.vigente }); }}
                         className="px-2.5 py-1 text-xs font-semibold  border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer">
                         Editar
@@ -257,7 +258,7 @@ export default function AdministracionUsuarios() {
                           <option value="false">No</option>
                         </select>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap">
                         <button onClick={async () => {
                           const { data, error } = await actualizarPlanEstudio(editandoPlan, planEditForm);
                           if (error) { setError(error); return; }
@@ -279,6 +280,7 @@ export default function AdministracionUsuarios() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -379,7 +381,7 @@ export default function AdministracionUsuarios() {
           <div className="bg-white  shadow-xl p-6 w-full max-w-lg mx-4" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-bold text-gray-900 mb-4">Nuevo usuario</h3>
             <form onSubmit={manejarCrear}>
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label>Usuario *</label>
                   <input type="text" required value={formulario.username} onChange={(e) => actualizarCampo("username", e.target.value)} />
@@ -397,7 +399,7 @@ export default function AdministracionUsuarios() {
               </div>
               {necesitaPerfil && (
                 <>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                       <label>Nombres *</label>
                       <input type="text" required value={formulario.nombres} onChange={(e) => actualizarCampo("nombres", e.target.value)} />
@@ -407,7 +409,7 @@ export default function AdministracionUsuarios() {
                       <input type="text" required value={formulario.apellido_paterno} onChange={(e) => actualizarCampo("apellido_paterno", e.target.value)} />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                       <label>Apellido materno *</label>
                       <input type="text" required value={formulario.apellido_materno} onChange={(e) => actualizarCampo("apellido_materno", e.target.value)} />
@@ -474,15 +476,15 @@ export default function AdministracionUsuarios() {
           <div className="bg-white  shadow-xl p-6 w-full max-w-lg mx-4" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-bold text-gray-900 mb-4">Editar usuario</h3>
             <p className="text-sm text-gray-500 mb-4">Usuario: <strong>{editandoUsuario.username}</strong> ({editandoUsuario.rol})</p>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="col-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className="md:col-span-2">
                 <label>Username</label>
                 <input type="text" value={editForm.username} onChange={(e) => setEditForm({ ...editForm, username: e.target.value })} />
               </div>
             </div>
             {(editandoUsuario.rol === "estudiante" || editandoUsuario.rol === "docente") && (
               <>
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label>Nombres</label>
                     <input type="text" value={editForm.nombres} onChange={(e) => setEditForm({ ...editForm, nombres: e.target.value })} />
@@ -492,7 +494,7 @@ export default function AdministracionUsuarios() {
                     <input type="text" value={editForm.apellido_paterno} onChange={(e) => setEditForm({ ...editForm, apellido_paterno: e.target.value })} />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label>Apellido materno</label>
                     <input type="text" value={editForm.apellido_materno} onChange={(e) => setEditForm({ ...editForm, apellido_materno: e.target.value })} />
@@ -513,7 +515,7 @@ export default function AdministracionUsuarios() {
                     {especialidades.map((esp) => (<option key={esp.id} value={esp.id}>{esp.nombre}</option>))}
                   </select>
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label>Plan de estudios</label>
                     <select value={editForm.plan_estudios_id} onChange={(e) => setEditForm({ ...editForm, plan_estudios_id: e.target.value, semestre_id: "" })}>

@@ -110,9 +110,9 @@ export default function CertificadosListar() {
       </div>
 
       <div className="bg-white  border border-gray-200 table-container mb-8">
-        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between flex-wrap gap-2">
           <h3 className="text-lg font-semibold text-gray-900">Solicitudes</h3>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {ESTADOS.map((op) => (
               <button key={op} onClick={() => setFiltro(op)}
                 className={`px-3 py-1 text-xs font-semibold  border transition-colors cursor-pointer ${

@@ -38,7 +38,7 @@ export default function Inicio() {
 
   return (
     <div>
-      <div className="flex justify-between items-start mb-8">
+      <div className="flex justify-between items-start mb-8 flex-wrap gap-2">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Bienvenido, {usuario?.username}</h2>
         </div>
