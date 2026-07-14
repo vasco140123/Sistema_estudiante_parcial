@@ -5,29 +5,36 @@ from app.modelos.matricula import Matricula
 from app.modelos.periodo_academico import PeriodoAcademico
 from app.modelos.semestre import Semestre
 
-
 def ejecutar():
-    if Matricula.query.first():
-        print("Matriculas ya existen")
+    if Matricula.query.count() > 5:
+        print("Matriculas ya existen en masa")
         return
 
-    estudiante = Estudiante.query.first()
+    estudiantes = Estudiante.query.all()
     periodo = PeriodoAcademico.query.first()
-    semestre = Semestre.query.first()
+    semestres = Semestre.query.all()
     estado = EstadoMatricula.query.filter_by(nombre="Matriculado").first()
 
-    if not estudiante or not periodo or not semestre or not estado:
-        print("No hay datos suficientes para crear matriculas")
+    if not estudiantes or not periodo or not semestres or not estado:
+        print("Faltan datos para matriculas masivas")
         return
 
-    matricula = Matricula(
-        estudiante_id=estudiante.id,
-        periodo_academico_id=periodo.id,
-        semestre_id=semestre.id,
-        estado_id=estado.id,
-    )
+    nuevas = 0
+    for i, est in enumerate(estudiantes):
+        # Asignar un semestre aleatorio basado en su ID para variar
+        semestre = semestres[i % min(len(semestres), 4)] 
+        
+        # Verificar si ya tiene matricula este periodo
+        existe = Matricula.query.filter_by(estudiante_id=est.id, periodo_academico_id=periodo.id).first()
+        if not existe:
+            mat = Matricula(
+                estudiante_id=est.id,
+                periodo_academico_id=periodo.id,
+                semestre_id=semestre.id,
+                estado_id=estado.id
+            )
+            db.session.add(mat)
+            nuevas += 1
 
-    db.session.add(matricula)
     db.session.commit()
-
-    print("Matriculas creadas")
+    print(f"Matriculas masivas creadas: {nuevas}")

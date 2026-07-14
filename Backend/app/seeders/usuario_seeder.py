@@ -1,10 +1,9 @@
 from app import db, bcrypt
 from app.modelos.usuario import Usuario
 
-
 def ejecutar():
-    MIN_DOCENTES = 5
-    MIN_ESTUDIANTES = 5
+    MIN_DOCENTES = 10
+    MIN_ESTUDIANTES = 30
 
     docentes_existentes = Usuario.query.filter_by(rol="docente").count()
     if docentes_existentes < MIN_DOCENTES:

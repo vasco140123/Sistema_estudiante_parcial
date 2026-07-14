@@ -1,3 +1,4 @@
+import random
 from app import db
 from app.modelos.estado_curso import EstadoCurso
 from app.modelos.matricula import Matricula
@@ -6,58 +7,50 @@ from app.modelos.seccion_curso import SeccionCurso
 from app.modelos.plan_cursos_semestre import PlanCursosSemestre
 from app.modelos.plan_estudiante import PlanEstudiante
 
-
 def ejecutar():
-    if MatriculaDetalle.query.first():
-        print("Detalles de matricula ya existen")
+    if MatriculaDetalle.query.count() > 20:
+        print("Detalles de matricula ya existen en masa")
         return
 
-    matricula = Matricula.query.first()
-    estado_curso = EstadoCurso.query.filter_by(nombre="Aprobado").first()
+    matriculas = Matricula.query.all()
+    estado_aprobado = EstadoCurso.query.filter_by(nombre="Aprobado").first()
+    estado_desaprobado = EstadoCurso.query.filter_by(nombre="Desaprobado").first()
 
-    if not matricula or not estado_curso:
-        print("No hay datos suficientes para crear detalles de matricula")
+    if not matriculas or not estado_aprobado or not estado_desaprobado:
+        print("Faltan datos para detalles de matricula")
         return
 
-    plan_estudiante = PlanEstudiante.query.filter_by(
-        estudiante_id=matricula.estudiante_id
-    ).first()
+    creados = 0
+    for mat in matriculas:
+        plan_estudiante = PlanEstudiante.query.filter_by(estudiante_id=mat.estudiante_id).first()
+        if not plan_estudiante: continue
 
-    if not plan_estudiante:
-        print("El estudiante de la matricula no tiene plan de estudios asignado")
-        return
+        # Buscar todos los cursos de su plan para el semestre matriculado
+        cursos_plan = PlanCursosSemestre.query.filter_by(
+            plan_estudios_id=plan_estudiante.plan_estudios_id,
+            semestre_id=mat.semestre_id
+        ).all()
 
-    # Se toma el curso del primer semestre del plan del propio estudiante
-    # (en vez de "el primero que exista en toda la tabla"), para que el
-    # curso que se marca como aprobado sea siempre uno que realmente le
-    # corresponde a ese estudiante.
-    primer_curso_plan = (
-        PlanCursosSemestre.query.filter_by(plan_estudios_id=plan_estudiante.plan_estudios_id)
-        .order_by(PlanCursosSemestre.semestre_id)
-        .first()
-    )
-
-    if not primer_curso_plan:
-        print("El plan de estudios del estudiante no tiene cursos asignados")
-        return
-
-    seccion = SeccionCurso.query.filter_by(
-        curso_id=primer_curso_plan.curso_id,
-        semestre_id=primer_curso_plan.semestre_id,
-    ).first()
-
-    if not seccion:
-        print("No hay seccion de curso para el curso del primer semestre del plan")
-        return
-
-    detalle = MatriculaDetalle(
-        matricula_id=matricula.id,
-        seccion_curso_id=seccion.id,
-        nota_final=15.50,
-        estado_curso_id=estado_curso.id,
-    )
-
-    db.session.add(detalle)
+        for cp in cursos_plan:
+            seccion = SeccionCurso.query.filter_by(
+                curso_id=cp.curso_id,
+                semestre_id=cp.semestre_id
+            ).first()
+            
+            if seccion:
+                existe = MatriculaDetalle.query.filter_by(matricula_id=mat.id, seccion_curso_id=seccion.id).first()
+                if not existe:
+                    nota = round(random.uniform(9.0, 18.0), 2)
+                    estado_id = estado_aprobado.id if nota >= 10.5 else estado_desaprobado.id
+                    
+                    detalle = MatriculaDetalle(
+                        matricula_id=mat.id,
+                        seccion_curso_id=seccion.id,
+                        nota_final=nota,
+                        estado_curso_id=estado_id,
+                    )
+                    db.session.add(detalle)
+                    creados += 1
+    
     db.session.commit()
-
-    print(f"Detalles de matricula creados: curso aprobado = {primer_curso_plan.curso.nombre}")
+    print(f"Detalles de matricula generados: {creados} (con notas aleatorias)")
