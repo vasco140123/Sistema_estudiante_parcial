@@ -1,5 +1,6 @@
 from app import db
 from app.modelos.curso import Curso
+from app.modelos.seccion_curso import SeccionCurso
 
 
 class CursoService:
@@ -11,6 +12,7 @@ class CursoService:
         creditos = data.get("creditos")
         horas_lectivas = data.get("horas_lectivas")
         horas_practicas = data.get("horas_practicas")
+        semestre_id = data.get("semestre_id")
 
         if not all([nombre, codigo, creditos]):
             return None, "Faltan campos requeridos: nombre, codigo, creditos"
@@ -26,8 +28,28 @@ class CursoService:
             horas_practicas=horas_practicas or 0,
         )
         db.session.add(curso)
+        db.session.flush()
+
+        seccion_creada = None
+        if semestre_id:
+            from app.modulos.matricula.services import MatriculaService
+            periodo = MatriculaService.periodo_actual()
+            if periodo:
+                seccion = SeccionCurso(
+                    periodo_academico_id=periodo.id,
+                    curso_id=curso.id,
+                    semestre_id=semestre_id,
+                    cupos=data.get("cupos", 40),
+                )
+                db.session.add(seccion)
+                db.session.flush()
+                seccion_creada = seccion.id
+
         db.session.commit()
-        return {"mensaje": "Curso creado correctamente", "curso_id": curso.id}, None
+        resultado = {"mensaje": "Curso creado correctamente", "curso_id": curso.id}
+        if seccion_creada:
+            resultado["seccion_id"] = seccion_creada
+        return resultado, None
 
     @staticmethod
     def actualizar_curso(id, data):

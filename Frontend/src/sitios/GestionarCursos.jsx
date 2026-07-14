@@ -12,7 +12,7 @@ import {
   listarPrerequisitos, crearPrerequisito, eliminarPrerequisito,
 } from "../servicios/cursosDocentes.servicio";
 
-const CURSO_VACIO = { nombre: "", codigo: "", creditos: "", horas_lectivas: "", horas_practicas: "" };
+const CURSO_VACIO = { nombre: "", codigo: "", creditos: "", horas_lectivas: "", horas_practicas: "", semestre_id: "" };
 
 export default function GestionarCursos() {
   const [cursos, setCursos] = useState([]);
@@ -87,7 +87,13 @@ export default function GestionarCursos() {
     e.preventDefault();
     setGuardando(true);
     setError(null);
-    const payload = { ...cursoForm, creditos: Number(cursoForm.creditos), horas_lectivas: Number(cursoForm.horas_lectivas), horas_practicas: Number(cursoForm.horas_practicas) };
+    const payload = {
+      ...cursoForm,
+      creditos: Number(cursoForm.creditos),
+      horas_lectivas: Number(cursoForm.horas_lectivas),
+      horas_practicas: Number(cursoForm.horas_practicas),
+      semestre_id: cursoForm.semestre_id ? Number(cursoForm.semestre_id) : undefined,
+    };
     const fn = editandoCurso ? actualizarCurso(editandoCurso, payload) : crearCurso(payload);
     const { data, error } = await fn;
     setGuardando(false);
@@ -389,6 +395,13 @@ export default function GestionarCursos() {
                 <div>
                   <label>Horas prácticas</label>
                   <input type="number" min={0} value={cursoForm.horas_practicas} onChange={(e) => setCursoForm({ ...cursoForm, horas_practicas: e.target.value })} />
+                </div>
+                <div>
+                  <label>Semestre (para crear sección automática)</label>
+                  <select value={cursoForm.semestre_id} onChange={(e) => setCursoForm({ ...cursoForm, semestre_id: e.target.value })}>
+                    <option value="">Sin sección</option>
+                    {semestres.map(s => (<option key={s.id} value={s.id}>{s.codigo}</option>))}
+                  </select>
                 </div>
               </div>
               <div className="flex gap-3 justify-end mt-6">
