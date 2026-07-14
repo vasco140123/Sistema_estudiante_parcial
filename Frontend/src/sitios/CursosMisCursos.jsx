@@ -62,7 +62,7 @@ export default function CursosMisCursos() {
       </div>
 
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Cursos asignados</h3>
-      <div className="bg-white  border border-gray-200 overflow-hidden">
+      <div className="bg-white  border border-gray-200 table-container">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">

@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTema } from "../context/ThemeContext";
 
-// ── Íconos SVG inline ────────────────────────────────────────────────────────
+// ── Iconos SVG inline ────────────────────────────────────────────────────────
 const IconHome = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -104,7 +105,7 @@ const IconChart = () => (
   </svg>
 );
 
-// ── Mapeo ícono por ruta ─────────────────────────────────────────────────────
+// ── Mapeo icono por ruta ─────────────────────────────────────────────────────
 function getIcon(to) {
   if (to === "/") return <IconHome />;
   if (to.includes("solicitar") && to.includes("matricula")) return <IconClipboard />;
@@ -124,12 +125,12 @@ function getIcon(to) {
   return <IconBook />;
 }
 
-// ── Menú por rol ─────────────────────────────────────────────────────────────
+// ── Menu por rol ─────────────────────────────────────────────────────────────
 const MENU_POR_ROL = {
   estudiante: [
     { label: "Inicio", to: "/" },
-    { label: "Solicitar matrícula", to: "/matricula/solicitar" },
-    { label: "Mis matrículas", to: "/matricula/mis-matriculas" },
+    { label: "Solicitar matricula", to: "/matricula/solicitar" },
+    { label: "Mis matriculas", to: "/matricula/mis-matriculas" },
     { label: "Mis notas", to: "/notas/mi-hoja" },
     { label: "Mi historial", to: "/record-academico/mi-historial" },
     { label: "Solicitar certificado", to: "/certificados/solicitar" },
@@ -142,7 +143,7 @@ const MENU_POR_ROL = {
   ],
   administrador: [
     { label: "Inicio", to: "/" },
-    { label: "Listar matrículas", to: "/matricula/listar" },
+    { label: "Listar matriculas", to: "/matricula/listar" },
     { label: "Asignar docentes", to: "/cursos-docentes/asignar" },
     { label: "Gestionar notas", to: "/notas/gestionar" },
     { label: "Listar certificados", to: "/certificados/listar" },
@@ -152,27 +153,22 @@ const MENU_POR_ROL = {
   ],
   direccion: [
     { label: "Inicio", to: "/" },
-    { label: "Estadísticas", to: "/matricula/estadisticas" },
+    { label: "Estadisticas", to: "/matricula/estadisticas" },
     { label: "Carga docente", to: "/cursos-docentes/carga-docente" },
     { label: "Gestionar notas", to: "/notas/gestionar" },
     { label: "Listar certificados", to: "/certificados/listar" },
     { label: "Reportes", to: "/record-academico/reportes" },
-    { label: "Auditorías", to: "/administracion/auditorias" },
+    { label: "Auditorias", to: "/administracion/auditorias" },
   ],
 };
 
 // ── Estilos ───────────────────────────────────────────────────────────────────
 const S = {
   aside: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    bottom: 0,
     width: "var(--sidebar-width, 260px)",
     backgroundColor: "#059669",
     display: "flex",
     flexDirection: "column",
-    zIndex: 50,
     fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
   },
   header: {
@@ -272,7 +268,7 @@ const S = {
 };
 
 // ── Componente ────────────────────────────────────────────────────────────────
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { usuario, cerrarSesion } = useAuth();
   const { oscuro, toggleTema } = useTema();
   const navigate = useNavigate();
@@ -286,20 +282,30 @@ export default function Sidebar() {
     navigate("/login");
   }
 
+  function handleNavClick() {
+    if (onClose) onClose();
+  }
+
   return (
-    <aside style={S.aside}>
-      {/* Título */}
+    <aside
+      className={`fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      } lg:translate-x-0`}
+      style={S.aside}
+    >
+      {/* Titulo */}
       <div style={S.header}>
         <h1 style={S.title}>Sistema&nbsp;Academico</h1>
       </div>
 
-      {/* Navegación */}
+      {/* Navegacion */}
       <nav style={S.nav}>
         {enlaces.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.to === "/"}
+            onClick={handleNavClick}
             style={({ isActive }) => (isActive ? S.linkActive : S.linkInactive)}
             onMouseEnter={(e) => {
               const active = e.currentTarget.style.backgroundColor === "rgb(255, 255, 255)";
@@ -324,7 +330,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Cerrar sesión */}
+      {/* Footer */}
       <div style={S.footer}>
         <button
           onClick={toggleTema}
@@ -354,7 +360,7 @@ export default function Sidebar() {
           }}
         >
           <IconLogOut />
-          <span>Cerrar sesión</span>
+          <span>Cerrar sesion</span>
         </button>
       </div>
     </aside>

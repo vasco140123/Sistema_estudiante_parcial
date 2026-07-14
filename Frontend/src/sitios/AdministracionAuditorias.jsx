@@ -62,7 +62,7 @@ export default function AdministracionAuditorias() {
       {reportes && (
         <div className="bg-white  border border-gray-200 p-6 mb-8">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Resumen estrategico</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-gray-50  p-4 text-center">
               <div className="text-2xl font-bold text-primary">{reportes.poblacion.total_estudiantes}</div>
               <div className="text-xs text-gray-500 mt-1">Estudiantes</div>
@@ -95,7 +95,7 @@ export default function AdministracionAuditorias() {
         </div>
       )}
 
-      <div className="bg-white  border border-gray-200 overflow-hidden mb-8">
+      <div className="bg-white  border border-gray-200 table-container mb-8">
         <div className="px-4 py-3 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Auditorias {!cargando && <span className="font-normal text-sm text-gray-500">({total} registros)</span>}</h3>
         </div>

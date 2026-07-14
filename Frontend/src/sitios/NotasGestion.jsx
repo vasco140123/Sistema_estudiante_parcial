@@ -130,7 +130,7 @@ export default function NotasGestion() {
       )}
 
       {actas && (
-        <div className="bg-white  border border-gray-200 overflow-hidden mb-8">
+        <div className="bg-white  border border-gray-200 table-container mb-8">
           <div className="px-4 py-3 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">Validacion de actas ({actas.items?.length || 0} ofertas)</h3>
           </div>
@@ -183,7 +183,7 @@ export default function NotasGestion() {
         </div>
       )}
 
-      <div className="bg-white  border border-gray-200 overflow-hidden mb-8">
+      <div className="bg-white  border border-gray-200 table-container mb-8">
         <div className="px-4 py-3 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Consolidado general</h3>
         </div>
@@ -216,7 +216,7 @@ export default function NotasGestion() {
       </div>
 
       {consulta.length > 0 && (
-        <div className="bg-white  border border-gray-200 overflow-hidden mb-8">
+        <div className="bg-white  border border-gray-200 table-container mb-8">
           <div className="px-4 py-3 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">Consulta por matricula #{matriculaId}</h3>
           </div>

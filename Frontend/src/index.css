@@ -91,3 +91,17 @@ label {
 .dark .hover\:text-gray-700:hover { color: var(--text-secondary) !important; }
 
 .dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: var(--border-light) !important; }
+
+/* ── Responsive helpers ───────────────────────────────────────────────── */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-container table {
+  min-width: 700px;
+}
+
+@media (max-width: 640px) {
+  .p-responsive { padding: 1rem; }
+}

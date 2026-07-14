@@ -38,7 +38,7 @@ export default function Inicio() {
 
   return (
     <div>
-      <div className="flex justify-between items-start mb-8">
+      <div className="flex justify-between items-start mb-8 flex-wrap gap-2">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Bienvenido, {usuario?.username}</h2>
         </div>
@@ -113,7 +113,7 @@ export default function Inicio() {
 
       {datos?.cursos && datos.cursos.length > 0 && (
         <div className="mt-6">
-          <div className="bg-white  border border-gray-200 overflow-hidden">
+          <div className="bg-white  border border-gray-200 table-container">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
