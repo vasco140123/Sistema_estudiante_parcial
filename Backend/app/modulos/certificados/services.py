@@ -4,7 +4,7 @@ import uuid
 import hashlib
 from datetime import datetime
 
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "https://sistema-estudiante-parcial.vercel.app")
 
 import qrcode
 from reportlab.lib.pagesizes import letter
