@@ -55,6 +55,12 @@ def generar_ficha_oficial(matricula_id):
     return controllers.generar_ficha_oficial(matricula_id)
 
 
+@matricula_bp.route('/<int:matricula_id>/rechazar', methods=['PUT'])
+@rol_requerido("administrador")
+def rechazar_matricula(matricula_id):
+    return controllers.rechazar_matricula(matricula_id)
+
+
 @matricula_bp.route('/estadisticas', methods=['GET'])
 @rol_requerido("direccion")
 def estadisticas():

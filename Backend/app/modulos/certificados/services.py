@@ -4,6 +4,8 @@ import uuid
 import hashlib
 from datetime import datetime
 
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+
 import qrcode
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -12,6 +14,7 @@ from app import db
 from app.modelos.certificado import Certificado
 from app.modelos.estudiante import Estudiante
 from app.modelos.matricula import Matricula
+from app.modelos.estado_matricula import EstadoMatricula
 
 
 CARPETA_COMPROBANTES = os.path.join(os.getcwd(), "uploads", "comprobantes_documentos")
@@ -52,8 +55,16 @@ class CertificadoService:
         if estudiante.deleted_at is not None:
             return None, "Tu registro de estudiante está desactivado. Contacta al administrador.", 403
 
-        deudas = Matricula.query.filter_by(
-            estudiante_id=estudiante.id, pagado=False
+        estados_deuda = (
+            EstadoMatricula.query.filter(
+                EstadoMatricula.nombre.in_(["Pendiente", "Validado", "Matriculado"])
+            ).with_entities(EstadoMatricula.id).all()
+        )
+        estados_deuda_ids = [e.id for e in estados_deuda]
+        deudas = Matricula.query.filter(
+            Matricula.estudiante_id == estudiante.id,
+            Matricula.pagado == False,
+            Matricula.estado_id.in_(estados_deuda_ids),
         ).count()
         if deudas > 0:
             return None, "No puedes solicitar certificados mientras tengas deudas pendientes. Regulariza tus pagos primero.", 403
@@ -97,7 +108,14 @@ class CertificadoService:
             "mensaje": "Solicitud registrada correctamente",
             "id": certificado.id,
             "ticket_codigo": certificado.ticket_codigo,
+            "tipo": certificado.tipo,
             "estado": certificado.estado,
+            "fecha_solicitud": certificado.created_at.strftime("%d/%m/%Y %H:%M") if certificado.created_at else None,
+            "pasos_siguientes": [
+                "Espera la revisión de tu solicitud por parte de Administración.",
+                "Una vez aprobada, Dirección firmará y emitirá el documento oficial.",
+                "Podrás descargar el PDF desde 'Mis solicitudes' cuando esté emitido.",
+            ],
         }, None, 201
 
     @staticmethod
@@ -256,7 +274,7 @@ class CertificadoService:
         return {"mensaje": "Trámite aprobado y derivado a Dirección para firma", "id": certificado.id}, None, 200
 
     @staticmethod
-    def rechazar_tramite(certificado_id, motivo):
+    def rechazar_tramite(certificado_id, motivo=None):
         certificado = db.session.get(Certificado, certificado_id)
         if not certificado:
             return None, "Solicitud no encontrada", 404
@@ -264,11 +282,8 @@ class CertificadoService:
         if certificado.estado != "Pendiente de Validación":
             return None, "Solo se pueden rechazar solicitudes en estado Pendiente de Validación", 400
 
-        if not motivo or not motivo.strip():
-            return None, "Debes indicar el motivo del rechazo", 400
-
         certificado.estado = "Rechazado"
-        certificado.motivo_rechazo = motivo.strip()
+        certificado.motivo_rechazo = motivo.strip() if motivo and motivo.strip() else "Rechazado por el administrador"
         db.session.commit()
 
         return {"mensaje": "Trámite rechazado", "id": certificado.id}, None, 200
@@ -289,7 +304,7 @@ class CertificadoService:
         especialidad = estudiante.especialidad if estudiante else None
         facultad = especialidad.facultad if especialidad else None
 
-        url_verificacion = f"http://localhost:5000/api/certificados/verificar/{certificado.codigo_verificacion}"
+        url_verificacion = f"{FRONTEND_URL}/certificado/verificar/{certificado.codigo_verificacion}"
 
         qr = qrcode.QRCode(version=1, box_size=6, border=2)
         qr.add_data(url_verificacion)
@@ -412,7 +427,7 @@ class CertificadoService:
         if not certificado or certificado.estado != "Emitido":
             return None, "Certificado no encontrado o no emitido"
 
-        url_verificacion = f"http://localhost:5000/api/certificados/verificar/{codigo_verificacion}"
+        url_verificacion = f"{FRONTEND_URL}/certificado/verificar/{codigo_verificacion}"
         qr = qrcode.QRCode(version=1, box_size=10, border=4)
         qr.add_data(url_verificacion)
         qr.make(fit=True)

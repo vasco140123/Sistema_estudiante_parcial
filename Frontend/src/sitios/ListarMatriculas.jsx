@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { listarMatriculas, listarEstadosMatricula, validarRequisitos, registrarPago, generarFichaOficial, urlDescargarComprobante } from "../servicios/matricula.servicio";
+import { listarMatriculas, listarEstadosMatricula, validarRequisitos, rechazarMatricula, registrarPago, generarFichaOficial, urlDescargarComprobante } from "../servicios/matricula.servicio";
 
 export default function ListarMatriculas() {
   const [matriculas, setMatriculas] = useState([]);
@@ -27,6 +27,13 @@ export default function ListarMatriculas() {
     const { error } = await validarRequisitos(id);
     if (error) { setError(error); return; }
     setMensaje("Matricula validada correctamente.");
+    cargarDatos();
+  }
+
+  async function manejarRechazar(id) {
+    const { error } = await rechazarMatricula(id);
+    if (error) { setError(error); return; }
+    setMensaje("Matrícula rechazada.");
     cargarDatos();
   }
 
@@ -100,9 +107,14 @@ export default function ListarMatriculas() {
                 <td className="px-4 py-3">
                   <div className="flex gap-2 flex-wrap">
                     {(m.estado_id === 1 || m.estado?.id === 1) && (
-                      <button onClick={() => manejarValidar(m.id)} className="px-3 py-1.5 text-xs font-medium text-white bg-primary  hover:bg-primary-hover transition-colors cursor-pointer">
-                        Validar
-                      </button>
+                      <>
+                        <button onClick={() => manejarValidar(m.id)} className="px-3 py-1.5 text-xs font-medium text-white bg-primary  hover:bg-primary-hover transition-colors cursor-pointer">
+                          Validar
+                        </button>
+                        <button onClick={() => manejarRechazar(m.id)} className="px-3 py-1.5 text-xs font-medium text-white bg-red-600  hover:bg-red-700 transition-colors cursor-pointer">
+                          Rechazar
+                        </button>
+                      </>
                     )}
                     {(m.estado_id === 2 || m.estado?.id === 2) && !m.pagado && (
                       <button onClick={() => manejarPago(m.id)} className="px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 border border-green-200  hover:bg-green-100 transition-colors cursor-pointer">

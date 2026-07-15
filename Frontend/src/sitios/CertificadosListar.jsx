@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import {
-  autorizarCertificado, descargarComprobante, emitirCertificado, listarSolicitudes, urlDescargarCertificado, verificarCertificado,
+  autorizarCertificado, descargarComprobante, emitirCertificado, listarSolicitudes, rechazarCertificado, urlDescargarCertificado, verificarCertificado,
 } from "../servicios/certificados.servicio";
 
 const ESTADOS = ["todos", "Pendiente de Validación", "Apto para Firma", "Emitido"];
@@ -31,6 +31,15 @@ export default function CertificadosListar() {
     setMensaje(null);
     setError(null);
     const { data, error } = await autorizarCertificado(id);
+    if (error) { setError(error); return; }
+    setMensaje(data.mensaje);
+    cargarSolicitudes();
+  }
+
+  async function manejarRechazar(id) {
+    setMensaje(null);
+    setError(null);
+    const { data, error } = await rechazarCertificado(id);
     if (error) { setError(error); return; }
     setMensaje(data.mensaje);
     cargarSolicitudes();
@@ -170,10 +179,16 @@ export default function CertificadosListar() {
                   <td className="px-4 py-3">
                     <div className="flex gap-1.5 flex-wrap">
                       {usuario?.rol === "administrador" && c.estado === "Pendiente de Validación" && (
-                        <button onClick={() => manejarAutorizar(c.id)}
-                          className="px-2.5 py-1 text-xs font-semibold  bg-primary text-white hover:bg-primary-hover transition-colors cursor-pointer">
-                          Aprobar
-                        </button>
+                        <>
+                          <button onClick={() => manejarAutorizar(c.id)}
+                            className="px-2.5 py-1 text-xs font-semibold  bg-primary text-white hover:bg-primary-hover transition-colors cursor-pointer">
+                            Aprobar
+                          </button>
+                          <button onClick={() => manejarRechazar(c.id)}
+                            className="px-2.5 py-1 text-xs font-semibold  bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer">
+                            Rechazar
+                          </button>
+                        </>
                       )}
                       {usuario?.rol === "direccion" && c.estado === "Apto para Firma" && (
                         <button onClick={() => manejarGenerar(c.id)} disabled={generando === c.id}

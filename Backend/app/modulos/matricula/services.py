@@ -247,9 +247,12 @@ class MatriculaService:
                 motivo = "No hay seccion disponible para este curso en el periodo actual"
 
             horarios = []
+            aulas = set()
             if seccion:
                 for h in seccion.horarios:
                     horarios.append({"dia": h.dia, "hora_inicio": str(h.hora_inicio), "hora_fin": str(h.hora_fin)})
+                    if h.aula:
+                        aulas.add(h.aula)
 
             resultado.append({
                 "id": seccion.id if seccion else curso.id,
@@ -263,7 +266,7 @@ class MatriculaService:
                 "motivo_bloqueo": motivo,
                 "seccion_curso_id": seccion.id if seccion else None,
                 "horarios": horarios,
-                "aula": None
+                "aula": "; ".join(sorted(aulas)) if aulas else None
             })
 
         for item in cursos_del_plan:

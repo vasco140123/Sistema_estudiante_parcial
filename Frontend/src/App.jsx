@@ -18,6 +18,7 @@ import RecordReportes from "./sitios/RecordReportes";
 import CertificadosSolicitar from "./sitios/CertificadosSolicitar";
 import CertificadosMisSolicitudes from "./sitios/CertificadosMisSolicitudes";
 import CertificadosListar from "./sitios/CertificadosListar";
+import CertificadoVerificar from "./sitios/CertificadoVerificar";
 import AdministracionUsuarios from "./sitios/AdministracionUsuarios";
 import AdministracionAuditorias from "./sitios/AdministracionAuditorias";
 import GestionarCursos from "./sitios/GestionarCursos";
@@ -52,6 +53,8 @@ export default function App() {
         <Route path="/administracion/usuarios" element={<RutaProtegida rolesPermitidos={["administrador"]}><AdministracionUsuarios /></RutaProtegida>} />
         <Route path="/administracion/auditorias" element={<RutaProtegida rolesPermitidos={["direccion"]}><AdministracionAuditorias /></RutaProtegida>} />
         <Route path="/administracion/cursos" element={<RutaProtegida rolesPermitidos={["administrador"]}><GestionarCursos /></RutaProtegida>} />
+
+        <Route path="/certificado/verificar/:codigo" element={<CertificadoVerificar />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

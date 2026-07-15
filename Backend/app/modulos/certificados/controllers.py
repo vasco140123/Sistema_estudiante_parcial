@@ -83,7 +83,7 @@ def rechazar_tramite():
     certificado_id = datos.get("id")
     motivo = datos.get("motivo")
 
-    resultado, error, codigo = CertificadoService.rechazar_tramite(certificado_id, motivo)
+    resultado, error, codigo = CertificadoService.rechazar_tramite(certificado_id, motivo=motivo)
 
     if error:
         return jsonify({"error": error}), codigo

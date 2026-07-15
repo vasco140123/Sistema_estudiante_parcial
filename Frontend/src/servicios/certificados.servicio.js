@@ -39,6 +39,13 @@ export async function autorizarCertificado(certificadoId) {
   });
 }
 
+export async function rechazarCertificado(certificadoId) {
+  return peticion(`/certificados/tramite/rechazar`, {
+    method: "PUT",
+    body: JSON.stringify({ id: certificadoId }),
+  });
+}
+
 export async function emitirCertificado(certificadoId) {
   return peticion(`/certificados/${certificadoId}/emitir`, {
     method: "POST",

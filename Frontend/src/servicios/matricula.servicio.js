@@ -61,6 +61,10 @@ export async function generarFichaOficial(matriculaId) {
   return peticion(`/matriculas/${matriculaId}/ficha-oficial`, { method: "POST" });
 }
 
+export async function rechazarMatricula(matriculaId) {
+  return peticion(`/matriculas/${matriculaId}/rechazar`, { method: "PUT" });
+}
+
 export async function obtenerEstadisticas() {
   return peticion("/matriculas/estadisticas");
 }

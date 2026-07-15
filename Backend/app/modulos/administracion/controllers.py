@@ -230,6 +230,9 @@ def eliminar_usuario(usuario_id):
         ExpedienteSemestral.query.filter_by(estudiante_id=estudiante.id).delete()
         HistorialMerito.query.filter_by(estudiante_id=estudiante.id).delete()
         Certificado.query.filter_by(estudiante_id=estudiante.id).delete()
+        matricula_ids = [m.id for m in Matricula.query.filter_by(estudiante_id=estudiante.id).with_entities(Matricula.id).all()]
+        if matricula_ids:
+            MatriculaDetalle.query.filter(MatriculaDetalle.matricula_id.in_(matricula_ids)).delete(synchronize_session=False)
         Matricula.query.filter_by(estudiante_id=estudiante.id).delete()
         db.session.delete(estudiante)
 

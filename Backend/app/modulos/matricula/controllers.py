@@ -258,6 +258,33 @@ def mis_matriculas():
     ])
 
 
+def rechazar_matricula(matricula_id):
+    matricula = db.session.get(Matricula, matricula_id)
+    if not matricula:
+        return jsonify({"error": "Matrícula no encontrada"}), 404
+
+    if matricula.estado_id != 1:
+        return jsonify({"error": "Solo se pueden rechazar matrículas pendientes"}), 400
+
+    rechazado = EstadoMatricula.query.filter_by(nombre="Rechazado").first()
+    if not rechazado:
+        rechazado = EstadoMatricula(nombre="Rechazado")
+        db.session.add(rechazado)
+        db.session.flush()
+
+    matricula.estado_id = rechazado.id
+
+    Auditoria.registrar(
+        usuario_id=int(get_jwt_identity()),
+        accion="rechazar_matricula",
+        detalle=f"Matrícula #{matricula_id} rechazada"
+    )
+
+    db.session.commit()
+
+    return jsonify({"mensaje": "Matrícula rechazada", "matricula_id": matricula.id})
+
+
 def descargar_comprobante(matricula_id):
     token = request.args.get("token")
     if token:

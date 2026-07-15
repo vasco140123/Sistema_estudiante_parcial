@@ -13,6 +13,7 @@ def ejecutar():
         EstadoMatricula(nombre="Matriculado"),
         EstadoMatricula(nombre="Retirado"),
         EstadoMatricula(nombre="Anulado"),
+        EstadoMatricula(nombre="Rechazado"),
     ]
     db.session.add_all(estados)
     db.session.commit()
