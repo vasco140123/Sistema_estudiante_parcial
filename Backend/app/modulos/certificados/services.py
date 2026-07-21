@@ -364,7 +364,7 @@ class CertificadoService:
                 from reportlab.platypus import Table, TableStyle
                 from reportlab.lib import colors
 
-                data = [["Periodo", "Curso", "P1", "P2", "Prác.", "Final", "Estado"]]
+                data = [["Periodo", "Curso", "P1", "Final", "Estado"]]
                 for d in detalles:
                     sec = d.seccion_curso
                     periodo = (
@@ -373,13 +373,11 @@ class CertificadoService:
                     )
                     curso_nombre = sec.curso.nombre if sec.curso else "-"
                     p1 = f"{d.nota_parcial:.2f}" if d.nota_parcial is not None else "-"
-                    p2 = f"{d.nota_parcial2:.2f}" if d.nota_parcial2 is not None else "-"
-                    pract = f"{d.nota_practica:.2f}" if d.nota_practica is not None else "-"
                     final = f"{d.nota_final:.2f}" if d.nota_final is not None else "-"
                     estado = d.estado_curso.nombre if d.estado_curso else "-"
-                    data.append([periodo, curso_nombre, p1, p2, pract, final, estado])
+                    data.append([periodo, curso_nombre, p1, final, estado])
 
-                col_widths = [55, ancho - 230 - 55 - 30 - 30 - 35 - 65, 30, 30, 35, 35, 65]
+                col_widths = [55, ancho - 140 - 55 - 30 - 30 - 55, 30, 30, 55]
                 table = Table(data, colWidths=col_widths)
                 table.setStyle(TableStyle([
                     ('BACKGROUND', (0, 0), (-1, 0), colors.Color(0.15, 0.33, 0.55)),
