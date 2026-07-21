@@ -82,7 +82,7 @@ class MatriculaService:
                 horario = ""
                 if sec and sec.horarios:
                     horario = "; ".join([
-                        f"Día {h.dia} {h.hora_inicio[:5]}-{h.hora_fin[:5]}"
+                        f"Día {h.dia} {h.hora_inicio.strftime('%H:%M')}-{h.hora_fin.strftime('%H:%M')}"
                         for h in sec.horarios
                     ])
                 rows.append([str(i), curso_nombre, creditos, docente, horario or "—"])
