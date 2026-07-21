@@ -14,6 +14,8 @@ from app import db
 from app.modelos.certificado import Certificado
 from app.modelos.estudiante import Estudiante
 from app.modelos.matricula import Matricula
+from app.modelos.matricula_detalle import MatriculaDetalle
+from app.modelos.seccion_curso import SeccionCurso
 from app.modelos.estado_matricula import EstadoMatricula
 
 
@@ -348,8 +350,71 @@ class CertificadoService:
             pdf.drawCentredString(ancho / 2, y, linea)
             y -= 18
 
-        pdf.setFont("Helvetica", 10)
-        pdf.drawCentredString(ancho / 2, y - 20, f"Expedido el {datetime.now().strftime('%d de %B de %Y')}")
+        if certificado.tipo in ("Certificado de notas", "Record academico"):
+            detalles = (
+                MatriculaDetalle.query
+                .join(Matricula)
+                .join(SeccionCurso)
+                .filter(Matricula.estudiante_id == estudiante.id)
+                .order_by(SeccionCurso.periodo_academico_id, SeccionCurso.semestre_id)
+                .all()
+            )
+
+            if detalles:
+                from reportlab.platypus import Table, TableStyle
+                from reportlab.lib import colors
+
+                data = [["Periodo", "Curso", "P1", "P2", "Prác.", "Final", "Estado"]]
+                for d in detalles:
+                    sec = d.seccion_curso
+                    periodo = (
+                        f"{sec.periodo_academico.nombre}-{sec.semestre.codigo}"
+                        if sec.periodo_academico and sec.semestre else "-"
+                    )
+                    curso_nombre = sec.curso.nombre if sec.curso else "-"
+                    p1 = f"{d.nota_parcial:.2f}" if d.nota_parcial is not None else "-"
+                    p2 = f"{d.nota_parcial2:.2f}" if d.nota_parcial2 is not None else "-"
+                    pract = f"{d.nota_practica:.2f}" if d.nota_practica is not None else "-"
+                    final = f"{d.nota_final:.2f}" if d.nota_final is not None else "-"
+                    estado = d.estado_curso.nombre if d.estado_curso else "-"
+                    data.append([periodo, curso_nombre, p1, p2, pract, final, estado])
+
+                col_widths = [55, ancho - 230 - 55 - 30 - 30 - 35 - 65, 30, 30, 35, 35, 65]
+                table = Table(data, colWidths=col_widths)
+                table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.Color(0.15, 0.33, 0.55)),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                    ('ALIGN', (0, 0), (0, -1), 'CENTER'),
+                    ('ALIGN', (2, 0), (-1, -1), 'CENTER'),
+                    ('ALIGN', (1, 0), (1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, -1), 7),
+                    ('FONTSIZE', (0, 0), (-1, 0), 8),
+                    ('TOPPADDING', (0, 0), (-1, -1), 3),
+                    ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+                    ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+                    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.Color(0.95, 0.95, 0.97)]),
+                ]))
+
+                table.wrapOn(pdf, ancho - 140, alto)
+                table_height = table._height
+                table_x = (ancho - (ancho - 140)) / 2
+                table_y = y - 25 - table_height
+                if table_y < 210:
+                    pdf.setFont("Helvetica", 7)
+                    pdf.drawCentredString(ancho / 2, 200, "(Continúa en página siguiente)")
+                else:
+                    table.drawOn(pdf, table_x, table_y)
+                    y = table_y - 5
+            else:
+                pdf.setFont("Helvetica", 10)
+                pdf.drawCentredString(ancho / 2, y - 10, "No se encontraron registros de notas.")
+                y -= 30
+        else:
+            pdf.setFont("Helvetica", 10)
+            y -= 20
+            pdf.drawCentredString(ancho / 2, y, f"Expedido el {datetime.now().strftime('%d de %B de %Y')}")
 
         from reportlab.lib.utils import ImageReader
         pdf.drawImage(
